@@ -1,0 +1,14 @@
+# Shop email assistant (Asha's Candle Co.)
+allowed_tools: [lookup_order, get_price_list, send_email, refund_order]
+require_approval: [refund_order]
+tools:
+  send_email:
+    allowed_recipient_domains: [example.com]   # demo: customers write from example.com
+    forbidden_patterns: ["bank", "IFSC", "account number", "wholesale"]
+    max_per_hour: 30
+  refund_order:
+    amount_field: amount
+    max_amount: 5000
+budgets:
+  calls_per_day: 300
+untrusted_input: {high: needs_approval, medium: allow}

@@ -1,0 +1,6 @@
+# Research agent (Studio Nine agency)
+allowed_tools: [web_search, fetch_url]
+tools:
+  fetch_url:
+    allowed_url_domains: [example.com, wikipedia.org]
+    max_per_hour: 30

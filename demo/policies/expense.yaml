@@ -1,0 +1,10 @@
+# Expense tracker bot (Kumar Hardware)
+allowed_tools: [parse_receipt, add_expense]
+tools:
+  add_expense:
+    amount_field: amount_inr
+    approval_above_amount: 10000
+    max_amount: 50000
+budgets:
+  calls_per_day: 200
+  spend_per_day: 100000
