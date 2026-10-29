@@ -36,10 +36,16 @@ class Settings:
     max_body_kb: int = 256
     rate_limit_per_min: int = 300
     cors_origins: list = field(default_factory=lambda: ["http://127.0.0.1:5173", "http://localhost:5173"])
+    approval_timeout_s: int = 300
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
+
+    def __repr__(self):  # keep secrets out of tracebacks and debug prints
+        return f"Settings(db_path={self.db_path}, host={self.host}, port={self.port}, redact={self.redact})"
 
     @classmethod
     def load(cls) -> "Settings":
-        env = {**read_env(), **{k: v for k, v in os.environ.items() if k.startswith("BLACKBOX_")}}
+        env = {**read_env(), **{k: v for k, v in os.environ.items() if k.startswith(("BLACKBOX_", "TELEGRAM_"))}}
         s = cls()
         if env.get("BLACKBOX_DB"):
             p = Path(env["BLACKBOX_DB"])
@@ -50,6 +56,9 @@ class Settings:
         s.redact = _flag(env.get("BLACKBOX_REDACT", "true"))
         s.max_body_kb = int(env.get("BLACKBOX_MAX_BODY_KB", s.max_body_kb))
         s.rate_limit_per_min = int(env.get("BLACKBOX_RATE_LIMIT_PER_MIN", s.rate_limit_per_min))
+        s.approval_timeout_s = int(env.get("BLACKBOX_APPROVAL_TIMEOUT_S", s.approval_timeout_s))
+        s.telegram_bot_token = env.get("TELEGRAM_BOT_TOKEN", "")
+        s.telegram_chat_id = env.get("TELEGRAM_CHAT_ID", "")
         if "BLACKBOX_CORS_ORIGINS" in env:
             s.cors_origins = [o.strip() for o in env["BLACKBOX_CORS_ORIGINS"].split(",") if o.strip()]
         return s
