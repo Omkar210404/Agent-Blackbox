@@ -189,7 +189,7 @@ function Timeline({ runId, focus, compareInit }) {
                   {d.severity && d.severity !== 'none' && <SeverityBadge value={d.severity} />}
                   {d.change && <Badge tone="warn" icon="alert">Change</Badge>}
                   <button className="btn btn-ghost btn-sm" title="Copy a link to this event" aria-label="Copy link to this event"
-                    onClick={(ev) => { ev.stopPropagation(); copy(`${window.location.origin}/#/runs/${runId}?event=${e.id}`, 'Link to event copied') }}>
+                    onClick={(ev) => { ev.stopPropagation(); copy(`${window.location.href.split('#')[0]}#/runs/${runId}?event=${e.id}`, 'Link to event copied') }}>
                     <Icon name="link" size={14} /></button>
                 </div>
               </div>

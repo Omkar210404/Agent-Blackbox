@@ -41,7 +41,7 @@ function ClientLinkModal({ agent, onClose }) {
   const [link, setLink] = useState(null)
   const [error, setError] = useState(null)
   const make = async () => {
-    try { const r = await api(`/v1/agents/${agent.id}/client-link`, { method: 'POST' }); setLink(window.location.origin + r.path) }
+    try { const r = await api(`/v1/agents/${agent.id}/client-link`, { method: 'POST' }); setLink(new URL(r.path, window.location.href).href) }
     catch (e) { setError(e.message) }
   }
   const close = () => { setLink(null); setError(null); onClose() }

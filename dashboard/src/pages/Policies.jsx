@@ -23,7 +23,7 @@ function TestPanel({ agentId, yaml }) {
     try { parsed = JSON.parse(args || '{}') } catch { setError('Arguments must be valid JSON.'); return }
     try {
       const r = await api('/v1/policy/test', { method: 'POST', body: { agent_id: agentId, yaml, tool, args: parsed, untrusted_input: untrusted || null } })
-      if (!r.ok) setError('Fix the policy first: ' + r.errors.join('; ')); else setResult(r)
+      if (!r.ok) setError(r.demo ? r.errors[0] : 'Fix the policy first: ' + r.errors.join('; ')); else setResult(r)
     } catch (e) { setError(e.message) }
   }
   const tone = result && { allow: 'ok', needs_approval: 'warn', deny: 'bad' }[result.decision]
@@ -83,7 +83,7 @@ function Editor({ agentId }) {
       <div className="card">
         <div className="card-head">
           <h2>Policy (YAML)</h2>
-          {check.ok ? <Badge tone="ok" icon="check">Valid</Badge> : <Badge tone="bad" icon="x">{check.errors.length} problem{check.errors.length > 1 ? 's' : ''}</Badge>}
+          {check.demo ? <Badge tone="mute" icon="alert">Checked only when run locally</Badge> : check.ok ? <Badge tone="ok" icon="check">Valid</Badge> : <Badge tone="bad" icon="x">{check.errors.length} problem{check.errors.length > 1 ? 's' : ''}</Badge>}
         </div>
         <ErrorBox error={error} />
         {data?.template && <p className="muted" style={{ marginTop: 0, fontSize: 12.5 }}>No policy yet: this is a starting template. Until you save one, every call is allowed and recorded.</p>}
