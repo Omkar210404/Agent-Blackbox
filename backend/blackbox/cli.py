@@ -97,6 +97,12 @@ def cmd_demo(_args):
     run_demo()
 
 
+def cmd_export_demo(args):
+    from .demo import export_snapshot
+    data = export_snapshot(args.out)
+    print(f"Wrote {args.out}: {len(data['runs'])} runs, {len(data['agents'])} agents (demo data only, no secrets)")
+
+
 def cmd_selftest(_args):
     from .selftest import run_selftest
     sys.exit(0 if run_selftest() else 1)
@@ -153,6 +159,9 @@ def main(argv=None):
     r.set_defaults(fn=cmd_report)
     sub.add_parser("demo", help="seed 3 scripted agents and run them (offline)").set_defaults(fn=cmd_demo)
     sub.add_parser("selftest", help="end-to-end check on a temp database").set_defaults(fn=cmd_selftest)
+    ex = sub.add_parser("export-demo", help="save demo data for the static GitHub Pages build")
+    ex.add_argument("--out", default=str(ROOT / "dashboard" / "src" / "demo-data.json"))
+    ex.set_defaults(fn=cmd_export_demo)
     sub.add_parser("scanner-eval", help="measure the injection scanner on synthetic samples").set_defaults(
         fn=cmd_scanner_eval)
     args = p.parse_args(argv)
