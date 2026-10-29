@@ -13,3 +13,4 @@ screenshots/
 .pytest_cache/
 report-*.md
 report-*.html
+dashboard/dist-demo/
