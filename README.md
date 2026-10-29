@@ -10,6 +10,8 @@ Blackbox does **not** build agents. It watches and controls agents that other pe
 
 It is built for freelancers and agencies who make agents for small businesses, and for the business owners who want to see what the agent did and be able to stop it.
 
+**[Live demo](https://omkar210404.github.io/Agent-Blackbox/)**: the dashboard with sample data, no install. It is a static snapshot of `blackbox demo`: buttons only change your browser tab, and testing custom calls needs the local app.
+
 ![Overview](docs/overview.png)
 
 It runs on your own machine, with no cloud service, no paid API and no model needed. The demo works fully offline.
@@ -243,6 +245,7 @@ The report comes as Markdown or a printable HTML page ("Save as PDF" in the brow
 | `blackbox report --agent [--start --end --format]` | audit report |
 | `blackbox selftest` | end-to-end check on a temporary database |
 | `blackbox scanner-eval` | measure the scanner on the synthetic samples |
+| `blackbox export-demo` | save demo data for the static GitHub Pages build (`cd dashboard && npm run build:demo`) |
 
 | Endpoint | Auth | Purpose |
 |---|---|---|
