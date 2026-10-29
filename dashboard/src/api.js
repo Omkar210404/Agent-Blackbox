@@ -1,4 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { demoApi } from './demo.js'
+
+// `npm run build:demo` builds the static GitHub Pages demo, which answers from saved demo data.
+export const DEMO = import.meta.env.MODE === 'demo'
 
 const KEY = 'bb_admin_token'
 
@@ -13,6 +17,7 @@ export const setToken = (t) => { memoryToken = t; auth.set(t) }
 const token = () => memoryToken || auth.get()
 
 export async function api(path, { method = 'GET', body, text = false, anon = false } = {}) {
+  if (DEMO) return demoApi(path, method, body)
   const headers = {}
   if (!anon) headers.Authorization = `Bearer ${token()}`
   if (body !== undefined) headers['Content-Type'] = 'application/json'
