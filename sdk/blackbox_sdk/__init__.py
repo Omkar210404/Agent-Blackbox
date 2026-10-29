@@ -95,11 +95,14 @@ class Blackbox:
             try:
                 r = self._http.get(f"/v1/approvals/{decision['approval_id']}")
                 if r.status_code == 200:
-                    status = r.json().get("status")
-                    if status == "approved":
-                        return {**decision, "decision": "allow", "reason": "approved by a human"}
-                    if status in ("denied", "expired"):
-                        return {**decision, "decision": "deny", "reason": f"approval {status}"}
+                    a = r.json()
+                    who = a.get("decided_by") or "a human"
+                    if a.get("status") == "approved":
+                        return {**decision, "decision": "allow", "reason": f"approved by {who}"}
+                    if a.get("status") == "denied":
+                        return {**decision, "decision": "deny", "reason": f"blocked by {who}"}
+                    if a.get("status") == "expired":
+                        return {**decision, "decision": "deny", "reason": "no human answered in time, denied by default"}
             except httpx.HTTPError:
                 pass
             time.sleep(self.poll_interval)
