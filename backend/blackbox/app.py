@@ -5,7 +5,8 @@ import threading
 import time
 from typing import Annotated, Literal
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
@@ -73,9 +74,13 @@ class RateLimiter:
             return n <= self.per_min
 
 
-def _bearer(authorization: str | None) -> str:
-    if authorization and authorization.lower().startswith("bearer "):
-        return authorization[7:].strip()
+_scheme = HTTPBearer(auto_error=False, description="Admin token (from .env) or an agent API key")
+Creds = HTTPAuthorizationCredentials | None
+
+
+def _bearer(creds: Creds) -> str:
+    if creds and creds.credentials:
+        return creds.credentials.strip()
     raise HTTPException(401, "missing bearer token")
 
 
@@ -104,13 +109,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=False,
                        allow_methods=["GET", "POST", "PUT"], allow_headers=["Authorization", "Content-Type"])
 
-    def admin(authorization: str | None = Header(None)):
-        token = _bearer(authorization)
+    def admin(creds: Creds = Depends(_scheme)):
+        token = _bearer(creds)
         if not settings.admin_token or not hmac.compare_digest(token.encode(), settings.admin_token.encode()):
             raise HTTPException(401, "invalid admin token")
 
-    def agent(authorization: str | None = Header(None)) -> dict:
-        found = store.agent_by_key(_bearer(authorization))
+    def agent(creds: Creds = Depends(_scheme)) -> dict:
+        found = store.agent_by_key(_bearer(creds))
         if not found:
             raise HTTPException(401, "invalid agent API key")
         return found
