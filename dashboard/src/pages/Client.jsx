@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { api, useApi } from '../api.js'
-import { Badge, Empty, ErrorBox, friendly, Icon, Modal } from '../ui.jsx'
+import { Badge, DemoBanner, Empty, ErrorBox, friendly, Icon, Modal } from '../ui.jsx'
 
 const iso = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10)
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`
@@ -24,6 +24,7 @@ export default function Client({ token }) {
   const tools = Object.entries(data.by_tool)
   return (
     <motion.div className="client" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <DemoBanner />
       <div className="row muted" style={{ fontSize: 12.5 }}><Icon name="lock" size={13} />Private page · read-only · recorded by Blackbox</div>
       <h1>What your AI did {isToday ? 'today' : 'on this day'}</h1>
       <div className="ink2" style={{ fontSize: 15 }}>{data.agent.name}{data.agent.owner ? ` · ${data.agent.owner}` : ''}</div>

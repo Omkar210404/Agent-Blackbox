@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { DEMO } from './api.js'
 
 const PATHS = {
   overview: 'M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z',
@@ -180,5 +181,15 @@ export function Sparkline({ values }) {
       <path d={`${line}L${w},${h}L0,${h}Z`} fill="url(#sg)" />
       <path d={line} fill="none" stroke="#7dd3fc" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
+  )
+}
+
+export function DemoBanner() {
+  if (!DEMO) return null
+  return (
+    <div className="demo-banner" role="note">
+      <Icon name="alert" size={14} />
+      <span>Live demo with sample data. Buttons only change this browser tab. <a href="https://github.com/Omkar210404/Agent-Blackbox#quickstart-5-minutes">Run Blackbox locally</a> for the real thing.</span>
+    </div>
   )
 }

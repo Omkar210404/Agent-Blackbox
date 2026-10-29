@@ -2,8 +2,8 @@ import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AnimatePresence, motion } from 'framer-motion'
 import './styles.css'
-import { api, auth, setToken, useApi } from './api.js'
-import { Icon, Toaster } from './ui.jsx'
+import { api, auth, DEMO, setToken, useApi } from './api.js'
+import { DemoBanner, Icon, Toaster } from './ui.jsx'
 import Overview from './pages/Overview.jsx'
 import AgentMap from './pages/AgentMap.jsx'
 import Runs from './pages/Runs.jsx'
@@ -99,15 +99,16 @@ function Shell() {
         <div className="side-foot">
           <span className="row">
             <Icon name={health.data ? 'check' : 'alert'} size={14} style={{ color: health.data ? 'var(--ok)' : 'var(--warn)' }} />
-            {health.data ? `Recorder online · v${health.data.version}` : 'Recorder unreachable'}
+            {DEMO ? 'Static demo · sample data' : health.data ? `Recorder online · v${health.data.version}` : 'Recorder unreachable'}
           </span>
-          <button className="btn btn-ghost btn-sm" style={{ justifyContent: 'flex-start' }}
+          {!DEMO && <button className="btn btn-ghost btn-sm" style={{ justifyContent: 'flex-start' }}
             onClick={() => { auth.clear(); window.dispatchEvent(new Event('bb-logout')) }}>
             <Icon name="logout" size={14} />Sign out
-          </button>
+          </button>}
         </div>
       </nav>
       <main className="main">
+        <DemoBanner />
         <AnimatePresence mode="wait"><div key={page}>{view}</div></AnimatePresence>
       </main>
     </div>
@@ -115,8 +116,11 @@ function Shell() {
 }
 
 function App() {
-  const clientToken = window.location.pathname.match(/^\/client\/([A-Za-z0-9_-]{20,})/)?.[1]
-  const [signedIn, setSignedIn] = useState(Boolean(auth.get()))
+  const [, rerender] = useState(0)
+  useEffect(() => { const on = () => rerender((n) => n + 1); window.addEventListener('hashchange', on); return () => window.removeEventListener('hashchange', on) }, [])
+  const clientToken = DEMO ? (window.location.hash.startsWith('#/client') ? 'demo' : null)
+    : window.location.pathname.match(/^\/client\/([A-Za-z0-9_-]{20,})/)?.[1]
+  const [signedIn, setSignedIn] = useState(DEMO || Boolean(auth.get()))
   useEffect(() => {
     const out = () => setSignedIn(false)
     const onHash = () => { if (takeTokenFromHash()) setSignedIn(true) }

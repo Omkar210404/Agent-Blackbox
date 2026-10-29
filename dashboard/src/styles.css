@@ -74,6 +74,12 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .topbar h1 { margin: 0; font-size: 24px; font-weight: 650; letter-spacing: -0.3px; }
 .topbar p { margin: 4px 0 0; color: var(--muted); }
 
+.demo-banner {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 9px 13px; border-radius: 11px; font-size: 13px;
+  color: var(--warn); background: var(--warn-soft); border: 1px solid rgba(251, 191, 36, 0.3);
+}
+.demo-banner a { color: #fde68a; text-decoration: underline; }
+
 /* ---------- surfaces ---------- */
 .card {
   background: linear-gradient(180deg, rgba(148, 163, 196, 0.07), rgba(148, 163, 196, 0.035));
