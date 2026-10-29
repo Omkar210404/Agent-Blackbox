@@ -35,7 +35,7 @@ All screenshots show the offline demo data.
 You need **Python 3.11+** and **Node.js 18+** (Node is only used once, to build the dashboard).
 
 ```bash
-git clone https://github.com/Omkar210404/agent-blackbox
+git clone https://github.com/Omkar210404/Agent-Blackbox agent-blackbox
 cd agent-blackbox
 
 python -m venv .venv
