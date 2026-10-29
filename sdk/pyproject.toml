@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blackbox-sdk"
+version = "0.1.0"
+description = "Python SDK for Blackbox, a flight recorder and control layer for AI agents"
+requires-python = ">=3.11"
+dependencies = ["httpx>=0.27"]
+license = { text = "MIT" }
+
+[tool.setuptools]
+packages = ["blackbox_sdk"]
