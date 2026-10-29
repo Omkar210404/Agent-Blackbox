@@ -160,9 +160,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def guard(request: Request, call_next):
         if request.method in ("POST", "PUT", "PATCH"):
             length = request.headers.get("content-length")
-            if length is None or not length.isdigit():
-                return JSONResponse({"detail": "Content-Length header required"}, 411)
-            if int(length) > settings.max_body_kb * 1024:
+            if length is None and "chunked" in request.headers.get("transfer-encoding", "").lower():
+                return JSONResponse({"detail": "Content-Length header required (chunked bodies are not accepted)"}, 411)
+            if length is not None and (not length.isdigit() or int(length) > settings.max_body_kb * 1024):
                 return JSONResponse({"detail": f"body larger than {settings.max_body_kb} KB"}, 413)
         if request.url.path.startswith("/v1/"):
             who = request.headers.get("authorization") or (request.client.host if request.client else "?")
