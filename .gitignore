@@ -11,3 +11,5 @@ dist/
 screenshots/
 .claude/
 .pytest_cache/
+report-*.md
+report-*.html
